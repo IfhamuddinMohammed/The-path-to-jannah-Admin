@@ -2,9 +2,40 @@
 // definitions in the shared Base44 app (base44/entities/*.jsonc) so this admin
 // stays in sync with the same backend the public "Path to Jannah" app reads from.
 
+import {
+  MessageSquare,
+  Moon,
+  HelpCircle,
+  FileText,
+  Star,
+  Quote as QuoteIcon,
+  Video as VideoIcon,
+  Brain,
+  BookOpen,
+  Calendar,
+  MapPin,
+  Heart,
+  Sparkles,
+  Scale,
+  UserPlus,
+  HandHeart,
+  MessageCircle,
+  MessageSquareText,
+} from "lucide-react";
+
+export const ENTITY_GROUPS = {
+  core: "Core Content",
+  learning: "Learning & Growth",
+  seerah: "Seerah",
+  guidance: "Guidance",
+  community: "Community",
+};
+
 export const ENTITY_SCHEMAS = {
   Hadith: {
     label: "Hadith",
+    icon: MessageSquare,
+    group: "core",
     titleField: "book",
     fields: {
       collection: { type: "string", enum: ["Sahih al-Bukhari", "Sahih Muslim", "Sunan an-Nasa'i", "Sunan Abi Dawood", "Jami` at-Tirmidhi", "Sunan Ibn Majah", "Riyad as-Salihin"], required: true },
@@ -13,11 +44,16 @@ export const ENTITY_SCHEMAS = {
       narrator: { type: "string" },
       arabic_text: { type: "string", multiline: true, rtl: true, required: true },
       english_text: { type: "string", multiline: true, required: true },
-      topic: { type: "string", enum: ["faith", "prayer", "charity", "fasting", "pilgrimage", "family", "akhlaq", "knowledge", "quran", "repentance"], required: true },
+      urdu_text: { type: "string", multiline: true, rtl: true },
+      roman_urdu_text: { type: "string", multiline: true },
+      authenticity: { type: "string", enum: ["Sahih", "Hasan", "Da'if"] },
+      topic: { type: "string", enum: ["faith", "prayer", "charity", "fasting", "pilgrimage", "family", "akhlaq", "knowledge", "quran", "repentance", "purity"], required: true },
     },
   },
   Dua: {
     label: "Dua",
+    icon: Moon,
+    group: "core",
     titleField: "title",
     fields: {
       title: { type: "string", required: true },
@@ -31,6 +67,8 @@ export const ENTITY_SCHEMAS = {
   },
   FAQ: {
     label: "FAQ",
+    icon: HelpCircle,
+    group: "core",
     titleField: "question",
     fields: {
       question: { type: "string", required: true },
@@ -41,6 +79,8 @@ export const ENTITY_SCHEMAS = {
   },
   Article: {
     label: "Article",
+    icon: FileText,
+    group: "core",
     titleField: "title",
     fields: {
       title: { type: "string", required: true },
@@ -52,8 +92,24 @@ export const ENTITY_SCHEMAS = {
       image_url: { type: "string" },
     },
   },
+  Quote: {
+    label: "Quote",
+    icon: QuoteIcon,
+    group: "core",
+    titleField: "text",
+    fields: {
+      text: { type: "string", multiline: true, required: true },
+      arabic_text: { type: "string", multiline: true, rtl: true },
+      source: { type: "string", required: true },
+      reference: { type: "string" },
+      type: { type: "string", enum: ["quran", "hadith", "scholar", "wisdom"], required: true },
+      featured: { type: "boolean" },
+    },
+  },
   AsmaulHusna: {
     label: "99 Names",
+    icon: Star,
+    group: "learning",
     titleField: "name_english",
     fields: {
       name_arabic: { type: "string", rtl: true, required: true },
@@ -65,20 +121,25 @@ export const ENTITY_SCHEMAS = {
       position: { type: "number", required: true },
     },
   },
-  Quote: {
-    label: "Quote",
-    titleField: "text",
+  Quiz: {
+    label: "Quiz",
+    icon: Brain,
+    group: "learning",
+    titleField: "question",
     fields: {
-      text: { type: "string", multiline: true, required: true },
-      arabic_text: { type: "string", multiline: true, rtl: true },
-      source: { type: "string", required: true },
-      reference: { type: "string" },
-      type: { type: "string", enum: ["quran", "hadith", "scholar", "wisdom"], required: true },
-      featured: { type: "boolean" },
+      question: { type: "string", multiline: true, required: true },
+      options: { type: "array", required: true },
+      correct_answer: { type: "string", required: true },
+      explanation: { type: "string", multiline: true },
+      category: { type: "string", enum: ["quran", "hadith", "prophets", "islamic-history", "fiqh", "general"], required: true },
+      difficulty: { type: "string", enum: ["beginner", "intermediate", "advanced"], required: true },
+      source_reference: { type: "string" },
     },
   },
   Video: {
     label: "Video",
+    icon: VideoIcon,
+    group: "learning",
     titleField: "title",
     fields: {
       title: { type: "string", required: true },
@@ -92,26 +153,130 @@ export const ENTITY_SCHEMAS = {
       featured: { type: "boolean" },
     },
   },
-  Quiz: {
-    label: "Quiz",
-    titleField: "question",
-    fields: {
-      question: { type: "string", multiline: true, required: true },
-      options: { type: "array", required: true },
-      correct_answer: { type: "string", required: true },
-      explanation: { type: "string", multiline: true },
-      category: { type: "string", enum: ["quran", "hadith", "prophets", "islamic-history", "fiqh", "general"], required: true },
-      difficulty: { type: "string", enum: ["beginner", "intermediate", "advanced"], required: true },
-      source_reference: { type: "string" },
-    },
-  },
   RomanUrduSurah: {
     label: "Roman Urdu Surah Cache",
+    icon: BookOpen,
+    group: "learning",
     titleField: "surah_name",
     fields: {
       surah_number: { type: "number", required: true },
       surah_name: { type: "string" },
       verses_data: { type: "string", multiline: true, required: true },
+    },
+  },
+  SeerahEvent: {
+    label: "Seerah Timeline Event",
+    icon: Calendar,
+    group: "seerah",
+    titleField: "title",
+    fields: {
+      year_ce: { type: "string", required: true },
+      year_ah: { type: "string" },
+      title: { type: "string", required: true },
+      title_arabic: { type: "string", rtl: true },
+      era: { type: "string", enum: ["early", "prophethood", "medina"], required: true },
+      description: { type: "string", multiline: true, required: true },
+      detailed_text: { type: "string", multiline: true, required: true },
+      key_lessons: { type: "array" },
+      authentic_sources: { type: "array" },
+    },
+  },
+  SeerahLocation: {
+    label: "Seerah Location",
+    icon: MapPin,
+    group: "seerah",
+    titleField: "name",
+    fields: {
+      name: { type: "string", required: true },
+      arabic_name: { type: "string", rtl: true, required: true },
+      significance: { type: "string", multiline: true, required: true },
+      events_count: { type: "number" },
+    },
+  },
+  ProphetName: {
+    label: "Name of the Prophet ﷺ",
+    icon: Heart,
+    group: "seerah",
+    titleField: "transliteration",
+    fields: {
+      arabic: { type: "string", rtl: true, required: true },
+      transliteration: { type: "string", required: true },
+      meaning: { type: "string", required: true },
+      reference: { type: "string" },
+    },
+  },
+  CharacterTrait: {
+    label: "Character Trait",
+    icon: Sparkles,
+    group: "seerah",
+    titleField: "trait",
+    fields: {
+      trait: { type: "string", required: true },
+      arabic_trait: { type: "string", rtl: true, required: true },
+      description: { type: "string", multiline: true, required: true },
+      hadith_citation: { type: "string", required: true },
+    },
+  },
+  FiqhRuling: {
+    label: "Fiqh Ruling",
+    icon: Scale,
+    group: "guidance",
+    titleField: "title",
+    fields: {
+      category: { type: "string", enum: ["purification", "prayer", "charity", "family"], required: true },
+      title: { type: "string", required: true },
+      content: { type: "string", multiline: true, required: true },
+    },
+  },
+  NewMuslimResource: {
+    label: "New Muslims Resource",
+    icon: UserPlus,
+    group: "guidance",
+    titleField: "title",
+    fields: {
+      section: { type: "string", enum: ["essentials", "first_steps", "support"], required: true },
+      title: { type: "string", required: true },
+      description: { type: "string", multiline: true, required: true },
+      status: { type: "string", enum: ["essential", "important"] },
+      order: { type: "number" },
+    },
+  },
+  DuaRequest: {
+    label: "Dua Request",
+    icon: HandHeart,
+    group: "community",
+    titleField: "request",
+    fields: {
+      name: { type: "string" },
+      gender: { type: "string", enum: ["brother", "sister"] },
+      category: { type: "string", enum: ["Health", "Family", "Guidance", "Provision", "General"], required: true },
+      request: { type: "string", multiline: true, required: true },
+      aameen_count: { type: "number" },
+    },
+  },
+  CommunityPost: {
+    label: "Community Post",
+    icon: MessageCircle,
+    group: "community",
+    titleField: "content",
+    fields: {
+      author_name: { type: "string" },
+      author_role: { type: "string" },
+      section: { type: "string", enum: ["discussions", "new_muslims"], required: true },
+      category: { type: "string", enum: ["Reflection", "Verse Insight", "General Question"], required: true },
+      content: { type: "string", multiline: true, required: true },
+      likes: { type: "number" },
+    },
+  },
+  PostComment: {
+    label: "Post Comment",
+    icon: MessageSquareText,
+    group: "community",
+    titleField: "content",
+    fields: {
+      post_id: { type: "string", required: true },
+      author: { type: "string" },
+      content: { type: "string", multiline: true, required: true },
     },
   },
 };

@@ -115,9 +115,16 @@ export default function EntityListPage() {
     <AdminLayout>
       <div className="p-6 max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
-          <div>
-            <h1 className="text-xl font-semibold">{schema.label}</h1>
-            <p className="text-sm text-gray-500">{records.length} records</p>
+          <div className="flex items-center gap-3">
+            {schema.icon && (
+              <div className="w-9 h-9 rounded-lg bg-emerald-800/10 text-emerald-800 flex items-center justify-center shrink-0">
+                <schema.icon className="w-4 h-4" />
+              </div>
+            )}
+            <div>
+              <h1 className="text-xl font-semibold">{schema.label}</h1>
+              <p className="text-sm text-gray-500">{records.length} records</p>
+            </div>
           </div>
           <Button onClick={openCreate}>
             <Plus className="w-4 h-4 mr-2" />
