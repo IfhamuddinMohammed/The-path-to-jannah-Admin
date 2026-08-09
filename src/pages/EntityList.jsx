@@ -113,7 +113,7 @@ export default function EntityListPage() {
 
   return (
     <AdminLayout>
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="p-4 md:p-6 max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
           <div className="flex items-center gap-3">
             {schema.icon && (
@@ -150,6 +150,10 @@ export default function EntityListPage() {
           ) : filtered.length === 0 ? (
             <div className="p-12 text-center text-gray-500">No {schema.label} records yet.</div>
           ) : (
+            // Scrolls horizontally on narrow screens instead of forcing every column to
+            // truncate/overlap — the table's column alignment (for scanning data) matters more
+            // here than avoiding a scrollbar, same trade-off admin tools like this typically make.
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -195,6 +199,7 @@ export default function EntityListPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </div>
       </div>
