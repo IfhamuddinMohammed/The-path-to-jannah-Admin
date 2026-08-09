@@ -25,8 +25,12 @@ export const AuthProvider = ({ children }) => {
       
       // First, check app public settings (with token if available)
       // This will tell us if auth is required, user not registered, etc.
+      // See base44Client.js for why a relative baseURL only works when this app is
+      // served from the same origin as the API (dev proxy / Base44-hosted production) —
+      // packaged into Capacitor it needs the real absolute backend URL instead.
+      const isNativeApp = typeof window !== 'undefined' && window.Capacitor?.isNativePlatform?.() === true;
       const appClient = createAxiosClient({
-        baseURL: `/api/apps/public`,
+        baseURL: `${isNativeApp ? appParams.appBaseUrl : ''}/api/apps/public`,
         headers: {
           'X-App-Id': appParams.appId
         },
