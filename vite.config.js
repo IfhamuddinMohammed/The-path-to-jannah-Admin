@@ -15,5 +15,16 @@ export default defineConfig({
       visualEditAgent: true
     }),
     react(),
-  ]
+  ],
+  // Vite's default build target tracks fairly recent evergreen browsers — fine in a desktop
+  // dev browser, but this app also runs inside whatever Android System WebView version is
+  // installed on a real device, which varies a lot and can lag well behind Chrome on older or
+  // unupdated phones. A syntax/feature the bundle relies on but that WebView doesn't support
+  // would throw immediately on script load — with no error boundary catching render errors
+  // before this change, that reads as a silent blank white screen. es2020 is a safer baseline
+  // (still covers the optional-chaining/nullish-coalescing syntax already used throughout this
+  // codebase) without transpiling so far down that bundle size balloons.
+  build: {
+    target: "es2020",
+  },
 });
