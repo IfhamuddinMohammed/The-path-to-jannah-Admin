@@ -41,7 +41,7 @@ export default function EntityListPage() {
     setLoading(true);
     try {
       const data = await base44.entities[entityName].list("-created_date", 200);
-      setRecords(data || []);
+      setRecords(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error(`Failed to load ${entityName}:`, error);
       toast({ variant: "destructive", title: `Couldn't load ${schema.label}`, description: error.message });

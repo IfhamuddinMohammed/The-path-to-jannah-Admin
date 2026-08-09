@@ -18,7 +18,7 @@ export default function Dashboard() {
         ENTITY_NAMES.map(async (name) => {
           try {
             const records = await base44.entities[name].list("-created_date", 1000);
-            return [name, records.length];
+            return [name, Array.isArray(records) ? records.length : null];
           } catch {
             return [name, null];
           }
